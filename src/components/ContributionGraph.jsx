@@ -158,7 +158,7 @@ export default function ContributionGraph({ auth, onLogout }) {
         <span className="username">@{competitorName}</span>
         <span className="sub comp-sub">
           {competitorData
-            ? `${competitorData.totalContributions.toLocaleString()} contributions${competitorData.streak > 0 ? ` · 🔥${competitorData.streak}` : ""}`
+            ? `${competitorData.totalContributions.toLocaleString()} contributions${competitorData.streak > 0 ? ` · ✦${competitorData.streak}` : ""}`
             : "Loading…"}
         </span>
       </div>
@@ -187,7 +187,7 @@ export default function ContributionGraph({ auth, onLogout }) {
           <div className="header-right">
             {!isComp && !loading && !error && streak > 0 && (
               <div className="streak-badge">
-                <span className="streak-flame">🔥</span>
+                <span className="streak-flame">✦</span>
                 <div className="streak-info">
                   <span className="streak-count">{streak}</span>
                   <span className="streak-label">day streak</span>

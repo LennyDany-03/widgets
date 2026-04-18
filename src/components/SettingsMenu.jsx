@@ -29,7 +29,7 @@ function applyWidgetOpacity(value) {
   const root = document.documentElement;
 
   root.style.setProperty("--widget-panel-alpha", (normalized * 0.93).toFixed(2));
-  root.style.setProperty("--widget-ring-alpha", (normalized * 0.19).toFixed(2));
+  root.style.setProperty("--widget-ring-alpha", (normalized * 0.28).toFixed(2));
   root.style.setProperty("--widget-ring-base-alpha", normalized.toFixed(2));
 }
 
