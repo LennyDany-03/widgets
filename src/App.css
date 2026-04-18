@@ -1,0 +1,342 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  background: transparent !important;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  max-width: 100vw;
+  max-height: 100vh;
+}
+
+body {
+  font-family: "SF Pro Display", "Segoe UI", -apple-system, sans-serif;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Outer glow ring ── */
+.widget-shell {
+  display: inline-block;
+  padding: 1px;
+  border-radius: 13px;
+  background: linear-gradient(to bottom, #2dda6a30 0%, #1c3025 100%);
+  overflow: hidden;
+}
+
+/* ── Widget panel ── */
+.widget {
+  background: rgba(7, 10, 17, 0.93);
+  border-radius: 12px;
+  padding: 11px 14px 10px;
+  width: fit-content;
+  max-width: calc(100vw - 2px);
+  position: relative;   /* lets absolute children (tooltip, settings menu) anchor here */
+  cursor: default;
+}
+
+/* ── Header ── */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 9px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1.5px solid #2dda6a50;
+  box-shadow: 0 0 8px #2dda6a22;
+  flex-shrink: 0;
+  display: block;
+}
+
+.avatar-placeholder {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #0d1117;
+  border: 1px solid #21262d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.username {
+  font-size: 12px;
+  font-weight: 600;
+  color: #e6edf3;
+  letter-spacing: 0.2px;
+}
+
+.sub {
+  font-size: 10px;
+  color: #3d444d;
+}
+
+/* ── Header right: streak + settings ── */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.streak-badge {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  background: rgba(255, 115, 0, 0.09);
+  border: 1px solid rgba(255, 115, 0, 0.22);
+  border-radius: 20px;
+  padding: 2px 8px 2px 5px;
+}
+
+.streak-fire   { font-size: 11px; line-height: 1; }
+.streak-count  { font-size: 12px; font-weight: 700; color: #ff9640; line-height: 1; }
+.streak-label  { font-size: 9px; color: #7d5a2a; margin-left: 1px; }
+
+/* ── Settings button ── */
+.settings-wrap {
+  position: relative;
+}
+
+.settings-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: #484f58;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
+}
+
+.settings-btn:hover,
+.settings-btn.active {
+  color: #8b949e;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: #21262d;
+}
+
+/* ── Settings dropdown ── */
+.settings-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+}
+
+.settings-menu {
+  position: absolute;
+  top: calc(100% + 5px);
+  right: 0;
+  background: rgba(10, 13, 20, 0.97);
+  border: 1px solid #21262d;
+  border-radius: 9px;
+  padding: 6px;
+  z-index: 300;
+  min-width: 148px;
+  box-shadow:
+    0 0 0 1px #2dda6a15,
+    0 8px 24px rgba(0, 0, 0, 0.85);
+  animation: menuIn 0.12s ease;
+}
+
+@keyframes menuIn {
+  from { opacity: 0; transform: translateY(-4px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)   scale(1);     }
+}
+
+.settings-title {
+  display: block;
+  font-size: 9px;
+  font-weight: 600;
+  color: #3d444d;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  padding: 3px 8px 7px;
+}
+
+.settings-option {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  background: none;
+  border: none;
+  color: #8b949e;
+  font-size: 11px;
+  font-family: inherit;
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.1s, color 0.1s;
+}
+
+.settings-option:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: #e6edf3;
+}
+
+.settings-icon {
+  font-size: 13px;
+  width: 16px;
+  text-align: center;
+  opacity: 0.65;
+  flex-shrink: 0;
+}
+
+/* ── Graph layout ── */
+.graph-wrapper {
+  display: flex;
+  gap: 4px;
+  align-items: flex-start;
+  overflow: hidden;
+}
+
+/* ── Day labels ── */
+.day-labels {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 18px;
+  flex-shrink: 0;
+}
+
+.day-label {
+  font-size: 9px;
+  color: #545d68;
+  height: 11px;
+  line-height: 11px;
+  width: 22px;
+  text-align: right;
+  font-weight: 500;
+}
+
+/* ── Month labels ── */
+.graph-area {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.month-labels {
+  display: grid;
+  grid-template-columns: repeat(53, 11px);
+  gap: 2px;
+  height: 14px;
+  overflow: hidden;
+}
+
+.month-label {
+  font-size: 9px;
+  color: #545d68;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+/* ── Cell grid ── */
+.grid {
+  display: flex;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.week-col {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.cell {
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  flex-shrink: 0;
+}
+
+.cell.hovered {
+  transform: scale(1.3);
+  z-index: 10;
+}
+
+.cell.empty {
+  background: transparent !important;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* ── Tooltip ── */
+.tooltip {
+  position: absolute;
+  background: #0d1117;
+  border: 1px solid #21262d;
+  border-radius: 7px;
+  padding: 6px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  white-space: nowrap;
+  z-index: 50;
+  pointer-events: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.9);
+  animation: tipIn 0.08s ease;
+}
+
+@keyframes tipIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Vertical direction */
+.tooltip.dir-up   { bottom: calc(100% + 7px); top: auto;             }
+.tooltip.dir-down { top:    calc(100% + 7px); bottom: auto;          }
+
+/* Horizontal alignment */
+.tooltip.align-center { left: 50%; transform: translateX(-50%); }
+.tooltip.align-right  { right: 0;  left: auto;  transform: none; }
+.tooltip.align-left   { left: 0;   transform: none;             }
+
+/* dir-down overrides the transform from align-center */
+.tooltip.dir-down.align-center { transform: translateX(-50%); }
+
+.tooltip strong { font-size: 11px; color: #e6edf3; font-weight: 600; }
+.tooltip span   { font-size: 10px; color: #484f58; }
+
+/* ── Status / error ── */
+.status {
+  color: #3d444d;
+  font-size: 12px;
+  padding: 20px 24px;
+  text-align: center;
+}
+
+.status.error { color: #f85149; }
