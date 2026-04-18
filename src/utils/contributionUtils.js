@@ -1,17 +1,17 @@
 export function getLevelColor(count) {
   if (count === 0)  return "#0d1117";
-  if (count <= 3)   return "#033a16";
-  if (count <= 6)   return "#0e6830";
-  if (count <= 9)   return "#19ab4a";
-  return              "#2dda6a";
+  if (count <= 3)   return "#0b3d1c";
+  if (count <= 6)   return "#0f7a35";
+  if (count <= 9)   return "#1fcc5f";
+  return              "#3dffa0";
 }
 
 export function getLevelGlow(count) {
   if (count === 0) return "none";
-  if (count <= 3)  return "0 0 3px #033a1680";
-  if (count <= 6)  return "0 0 4px #0e683080";
-  if (count <= 9)  return "0 0 6px #19ab4a90";
-  return             "0 0 8px #2dda6aaa";
+  if (count <= 3)  return "0 0 4px #0b3d1c90";
+  if (count <= 6)  return "0 0 5px #0f7a3599";
+  if (count <= 9)  return "0 0 7px #1fcc5faa";
+  return             "0 0 10px #3dffa0cc";
 }
 
 export function padWeeks(weeks) {
