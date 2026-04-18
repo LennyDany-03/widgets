@@ -139,6 +139,8 @@ export default function SettingsMenu({ onLogout }) {
 
     if (open && view === "position") {
       root.style.setProperty("--widget-menu-bottom-room", "48px");
+    } else if (open && view === "main") {
+      root.style.setProperty("--widget-menu-bottom-room", "34px");
     } else {
       root.style.removeProperty("--widget-menu-bottom-room");
     }
