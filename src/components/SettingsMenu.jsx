@@ -5,6 +5,11 @@ import {
   PhysicalPosition,
   primaryMonitor,
 } from "@tauri-apps/api/window";
+import {
+  disable as disableAutoStart,
+  enable as enableAutoStart,
+  isEnabled as isAutoStartEnabled,
+} from "@tauri-apps/plugin-autostart";
 import { loadTheme, saveTheme, THEMES } from "../utils/themeConfig";
 
 const appWindow = getCurrentWindow();
@@ -127,6 +132,9 @@ export default function SettingsMenu({ onLogout }) {
   const [view,    setView]    = useState("main"); // "main" | "position" | "visibility" | "theme"
   const [opacity, setOpacity] = useState(getInitialOpacity);
   const [theme,   setTheme]   = useState(loadTheme);
+  const [autoStartEnabled, setAutoStartEnabled] = useState(false);
+  const [autoStartBusy,    setAutoStartBusy]    = useState(true);
+  const [autoStartError,   setAutoStartError]   = useState("");
 
   const close = () => { setOpen(false); setView("main"); };
 
@@ -135,12 +143,37 @@ export default function SettingsMenu({ onLogout }) {
   }, [opacity]);
 
   useEffect(() => {
+    let cancelled = false;
+
+    const syncAutoStart = async () => {
+      setAutoStartBusy(true);
+      try {
+        const enabled = await isAutoStartEnabled();
+        if (!cancelled) {
+          setAutoStartEnabled(enabled);
+          setAutoStartError("");
+        }
+      } catch (_) {
+        if (!cancelled) {
+          setAutoStartEnabled(false);
+          setAutoStartError("Startup setting unavailable");
+        }
+      } finally {
+        if (!cancelled) setAutoStartBusy(false);
+      }
+    };
+
+    syncAutoStart();
+    return () => { cancelled = true; };
+  }, []);
+
+  useEffect(() => {
     const root = document.documentElement;
 
     if (open && view === "position") {
       root.style.setProperty("--widget-menu-bottom-room", "48px");
     } else if (open && view === "main") {
-      root.style.setProperty("--widget-menu-bottom-room", "34px");
+      root.style.setProperty("--widget-menu-bottom-room", "88px");
     } else {
       root.style.removeProperty("--widget-menu-bottom-room");
     }
@@ -162,6 +195,28 @@ export default function SettingsMenu({ onLogout }) {
 
   const handleTheme = (nextTheme) => {
     setTheme(saveTheme(nextTheme));
+  };
+
+  const handleAutoStart = async () => {
+    if (autoStartBusy) return;
+
+    const nextEnabled = !autoStartEnabled;
+    setAutoStartBusy(true);
+    setAutoStartError("");
+
+    try {
+      if (nextEnabled) {
+        await enableAutoStart();
+      } else {
+        await disableAutoStart();
+      }
+
+      setAutoStartEnabled(await isAutoStartEnabled());
+    } catch (_) {
+      setAutoStartError("Could not update startup");
+    } finally {
+      setAutoStartBusy(false);
+    }
   };
 
   // CSS gradient fill % for the slider track
@@ -205,6 +260,23 @@ export default function SettingsMenu({ onLogout }) {
                   <span className="sm-row-label">Theme</span>
                   <ChevronRight />
                 </button>
+
+                <button
+                  className={`sm-row sm-toggle-row${autoStartEnabled ? " active" : ""}`}
+                  onClick={handleAutoStart}
+                  disabled={autoStartBusy}
+                  aria-pressed={autoStartEnabled}
+                >
+                  <span className={`sm-checkbox${autoStartEnabled ? " checked" : ""}`} />
+                  <span className="sm-row-label">Start app on system startup</span>
+                  <span className="sm-row-state">
+                    {autoStartBusy ? "..." : autoStartEnabled ? "On" : "Off"}
+                  </span>
+                </button>
+
+                {autoStartError && (
+                  <span className="sm-inline-error">{autoStartError}</span>
+                )}
 
                 <button className="sm-row sm-row-danger" onClick={handleLogout}>
                   <span className="sm-row-icon">↩</span>

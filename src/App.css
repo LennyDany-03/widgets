@@ -257,7 +257,7 @@ body {
   border-radius: 9px;
   padding: 5px;
   z-index: 300;
-  width: 168px;
+  width: 224px;
   box-shadow:
     0 0 0 1px rgba(var(--accent-rgb), 0.07),
     0 8px 28px rgba(0, 0, 0, 0.88);
@@ -299,6 +299,11 @@ body {
 
 .sm-row:hover { background: rgba(var(--accent-rgb),0.1); color: var(--text); }
 
+.sm-row:disabled {
+  cursor: default;
+  opacity: 0.72;
+}
+
 .sm-row-danger {
   color: #8b6f73;
 }
@@ -317,6 +322,63 @@ body {
 }
 
 .sm-row-label { flex: 1; text-align: left; }
+
+.sm-toggle-row {
+  align-items: center;
+  min-height: 36px;
+}
+
+.sm-toggle-row .sm-row-label {
+  line-height: 1.15;
+  white-space: normal;
+}
+
+.sm-checkbox {
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: rgba(var(--accent-rgb), 0.05);
+  flex-shrink: 0;
+  position: relative;
+}
+
+.sm-checkbox.checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.sm-checkbox.checked::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid var(--button-text);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.sm-row-state {
+  color: var(--text-dim);
+  font-size: 9px;
+  font-weight: 700;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.sm-toggle-row.active .sm-row-state {
+  color: var(--accent);
+}
+
+.sm-inline-error {
+  display: block;
+  color: #ff8b85;
+  font-size: 9px;
+  line-height: 1.2;
+  padding: 0 8px 4px 38px;
+}
 
 /* back button */
 .sm-back {
