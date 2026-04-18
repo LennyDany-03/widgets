@@ -5,6 +5,7 @@ import {
   PhysicalPosition,
   primaryMonitor,
 } from "@tauri-apps/api/window";
+import { loadTheme, saveTheme, THEMES } from "../utils/themeConfig";
 
 const appWindow = getCurrentWindow();
 const OPACITY_STORAGE_KEY = "github-widget-opacity";
@@ -123,8 +124,9 @@ const BackArrow = () => (
 /* ── Component ── */
 export default function SettingsMenu({ onLogout }) {
   const [open,    setOpen]    = useState(false);
-  const [view,    setView]    = useState("main"); // "main" | "position" | "visibility"
+  const [view,    setView]    = useState("main"); // "main" | "position" | "visibility" | "theme"
   const [opacity, setOpacity] = useState(getInitialOpacity);
+  const [theme,   setTheme]   = useState(loadTheme);
 
   const close = () => { setOpen(false); setView("main"); };
 
@@ -154,6 +156,10 @@ export default function SettingsMenu({ onLogout }) {
   const handleLogout = () => {
     close();
     onLogout?.();
+  };
+
+  const handleTheme = (nextTheme) => {
+    setTheme(saveTheme(nextTheme));
   };
 
   // CSS gradient fill % for the slider track
@@ -192,6 +198,12 @@ export default function SettingsMenu({ onLogout }) {
                   <ChevronRight />
                 </button>
 
+                <button className="sm-row" onClick={() => setView("theme")}>
+                  <span className="sm-row-icon">◒</span>
+                  <span className="sm-row-label">Theme</span>
+                  <ChevronRight />
+                </button>
+
                 <button className="sm-row sm-row-danger" onClick={handleLogout}>
                   <span className="sm-row-icon">↩</span>
                   <span className="sm-row-label">Logout</span>
@@ -227,6 +239,29 @@ export default function SettingsMenu({ onLogout }) {
                       )
                     )
                   )}
+                </div>
+              </>
+            )}
+
+            {/* ── THEME VIEW ── */}
+            {view === "theme" && (
+              <>
+                <button className="sm-back" onClick={() => setView("main")}>
+                  <BackArrow /> Theme
+                </button>
+
+                <div className="theme-options">
+                  {THEMES.map(({ id, label }) => (
+                    <button
+                      key={id}
+                      className={`theme-option${theme === id ? " active" : ""}`}
+                      onClick={() => handleTheme(id)}
+                    >
+                      <span className={`theme-swatch theme-swatch-${id}`} />
+                      <span>{label}</span>
+                      {theme === id && <span className="theme-check">✓</span>}
+                    </button>
+                  ))}
                 </div>
               </>
             )}
