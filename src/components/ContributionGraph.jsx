@@ -44,9 +44,9 @@ function GraphGrid({ weeks }) {
   CompetitorView — own component so the hook is called unconditionally within it.
   Reports loaded data back to parent via onDataLoaded so the shared header can display it.
 */
-function CompetitorView({ username, onSave, onDataLoaded }) {
+function CompetitorView({ username, token, onSave, onDataLoaded }) {
   const { weeks, totalContributions, streak, avatarUrl, loading, error } =
-    useGithubContributions(username);
+    useGithubContributions(username, token);
 
   useEffect(() => {
     if (!loading && !error && avatarUrl) {
@@ -114,10 +114,10 @@ const BackIcon = () => (
 );
 
 /* ── Main component ── */
-export default function ContributionGraph() {
-  const ownUsername = import.meta.env.VITE_GITHUB_USERNAME;
+export default function ContributionGraph({ auth, onLogout }) {
+  const ownUsername = auth.username;
   const { weeks, totalContributions, streak, avatarUrl, loading, error } =
-    useGithubContributions();
+    useGithubContributions(auth.username, auth.token, { autoRefresh: true });
 
   const [competitors,       setCompetitors]  = useState(loadCompetitors);
   const [viewMode,          setViewMode]     = useState("own");
@@ -200,7 +200,7 @@ export default function ContributionGraph() {
               onSelect={viewCompetitor}
               onAddNew={() => setViewMode("searching")}
             />
-            <SettingsMenu />
+            <SettingsMenu onLogout={onLogout} />
           </div>
         </div>
 
@@ -222,6 +222,7 @@ export default function ContributionGraph() {
           <CompetitorView
             key={competitorName}
             username={competitorName}
+            token={auth.token}
             onSave={addCompetitor}
             onDataLoaded={setCompData}
           />

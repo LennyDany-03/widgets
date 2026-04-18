@@ -121,7 +121,7 @@ const BackArrow = () => (
 );
 
 /* ── Component ── */
-export default function SettingsMenu() {
+export default function SettingsMenu({ onLogout }) {
   const [open,    setOpen]    = useState(false);
   const [view,    setView]    = useState("main"); // "main" | "position" | "visibility"
   const [opacity, setOpacity] = useState(getInitialOpacity);
@@ -149,6 +149,11 @@ export default function SettingsMenu() {
     setOpacity(val);
     applyWidgetOpacity(val);
     try { localStorage.setItem(OPACITY_STORAGE_KEY, String(val)); } catch (_) {}
+  };
+
+  const handleLogout = () => {
+    close();
+    onLogout?.();
   };
 
   // CSS gradient fill % for the slider track
@@ -185,6 +190,11 @@ export default function SettingsMenu() {
                   <span className="sm-row-icon">◑</span>
                   <span className="sm-row-label">Visibility</span>
                   <ChevronRight />
+                </button>
+
+                <button className="sm-row sm-row-danger" onClick={handleLogout}>
+                  <span className="sm-row-icon">↩</span>
+                  <span className="sm-row-label">Logout</span>
                 </button>
               </>
             )}
