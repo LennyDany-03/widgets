@@ -14,7 +14,7 @@
       {
         "title": "GitHub Widget",
         "width": 780,
-        "height": 190,
+        "height": 245,
         "decorations": false,
         "transparent": true,
         "alwaysOnTop": false,

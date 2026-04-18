@@ -132,6 +132,18 @@ export default function SettingsMenu() {
     applyWidgetOpacity(opacity);
   }, [opacity]);
 
+  useEffect(() => {
+    const root = document.documentElement;
+
+    if (open && view === "position") {
+      root.style.setProperty("--widget-menu-bottom-room", "48px");
+    } else {
+      root.style.removeProperty("--widget-menu-bottom-room");
+    }
+
+    return () => root.style.removeProperty("--widget-menu-bottom-room");
+  }, [open, view]);
+
   const handleOpacity = (e) => {
     const val = Number(e.target.value);
     setOpacity(val);
